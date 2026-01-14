@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卢裕森电力网 - 电力知识汇总</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/v4-shims.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36D399',
+                        accent: '#F87272',
+                        neutral: '#1F2937',
+                        'neutral-light': '#F3F4F6'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #165DFF 0%, #36D399 100%);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            .page-transition {
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+            .page-hidden {
+                opacity: 0;
+                transform: translateY(20px);
+                display: none;
+            }
+            .page-active {
+                opacity: 1;
+                transform: translateY(0);
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 text-gray-800">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-bolt text-primary text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-primary">卢裕森电力网</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" onclick="showPage('home'); return false;" class="nav-link text-primary font-semibold border-b-2 border-primary pb-1">首页</a>
+                    <a href="#" onclick="showPage('policies'); return false;" class="nav-link text-gray-700 hover:text-primary transition-colors">政策解读</a>
+                    <a href="#" onclick="showPage('reits'); return false;" class="nav-link text-gray-700 hover:text-primary transition-colors">REITs市场</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-primary">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="md:hidden hidden bg-white shadow-lg absolute w-full" id="mobile-menu">
+            <div class="px-4 py-2 space-y-2">
+                <a href="#" onclick="showPage('home'); toggleMobileMenu(); return false;" class="mobile-nav-link block py-2 text-primary font-semibold">首页</a>
+                <a href="#" onclick="showPage('policies'); toggleMobileMenu(); return false;" class="mobile-nav-link block py-2 text-gray-700 hover:text-primary">政策解读</a>
+                <a href="#" onclick="showPage('reits'); toggleMobileMenu(); return false;" class="mobile-nav-link block py-2 text-gray-700 hover:text-primary">REITs市场</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="pt-16 min-h-screen">
+        <!-- 首页内容 -->
+        <div id="home-page" class="page-content page-active">
+            <!-- 英雄区域 -->
+            <section class="gradient-bg text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">电力知识汇总</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">从传统能源到新能源，全面了解电力行业发展</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showSection('new-energy')" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-leaf mr-2"></i>新能源
+                        </button>
+                        <button onclick="showSection('traditional-energy')" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                            <i class="fas fa-industry mr-2"></i>传统能源
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据概览 -->
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">2024年中国电力发展概况</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <i class="fas fa-bolt text-primary text-3xl"></i>
+                                <span class="text-sm text-gray-500">总装机容量</span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">33.5亿千瓦</div>
+                            <div class="text-sm text-green-600 mt-2">同比增长14.6%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <i class="fas fa-leaf text-secondary text-3xl"></i>
+                                <span class="text-sm text-gray-500">新能源装机</span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">14.5亿千瓦</div>
+                            <div class="text-sm text-green-600 mt-2">首次超过火电</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <i class="fas fa-bolt text-purple-600 text-3xl"></i>
+                                <span class="text-sm text-gray-500">总发电量</span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">10.09万亿kWh</div>
+                            <div class="text-sm text-green-600 mt-2">同比增长6.7%</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <i class="fas fa-chart-pie text-orange-600 text-3xl"></i>
+                                <span class="text-sm text-gray-500">清洁能源占比</span>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">35%</div>
+                            <div class="text-sm text-green-600 mt-2">持续提升</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 新能源部分 -->
+            <section id="new-energy" class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">新能源发电技术</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                        <!-- 水力发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-blue-500 to-blue-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/uj321xl0Y5" alt="水力发电站" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-tint mr-1"></i>水力发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">水力发电</h3>
+                                <p class="text-gray-600 mb-6">水力发电是利用水流能量转化为电能的技术，具有清洁、可再生、运行成本低等优势。中国水力资源丰富，是世界上水电装机容量最大的国家。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-xl font-bold text-gray-800">4.36亿千瓦</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-xl font-bold text-gray-800">14256.8亿kWh</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">同比增长</div>
+                                        <div class="text-xl font-bold text-green-600">+10.9%</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.07-0.35元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>清洁无污染</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>运行成本低</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>调峰能力强</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>建设周期长</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>投资规模大</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>受季节影响</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 风力发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-green-500 to-green-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/1Yu31xl0Y5" alt="风力发电机" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-wind mr-1"></i>风力发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">风力发电</h3>
+                                <p class="text-gray-600 mb-6">风力发电是将风能转化为电能的技术，具有资源丰富、无污染、建设周期短等特点。中国风电装机容量连续多年位居世界第一。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-xl font-bold text-gray-800">5.21亿千瓦</div>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-xl font-bold text-gray-800">9970.4亿kWh</div>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">同比增长</div>
+                                        <div class="text-xl font-bold text-green-600">+12.5%</div>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.2-0.8元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>资源丰富</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>无污染排放</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>建设周期短</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>间歇性强</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>噪音污染</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>占用土地</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- 太阳能发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-yellow-500 to-yellow-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/TfZ71xl0Y5" alt="太阳能光伏板" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-yellow-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-sun mr-1"></i>太阳能发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">太阳能发电</h3>
+                                <p class="text-gray-600 mb-6">太阳能发电是将太阳能转化为电能的技术，包括光伏发电和光热发电。中国光伏产业全球领先，成本持续下降，成为最具竞争力的新能源之一。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-yellow-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-xl font-bold text-gray-800">8.87亿千瓦</div>
+                                    </div>
+                                    <div class="bg-yellow-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-xl font-bold text-gray-800">8390.4亿kWh</div>
+                                    </div>
+                                    <div class="bg-yellow-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">同比增长</div>
+                                        <div class="text-xl font-bold text-green-600">+43.6%</div>
+                                    </div>
+                                    <div class="bg-yellow-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.15-0.5元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>资源无限</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>无污染</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>安装灵活</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>间歇性</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>能量密度低</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>占地较大</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 核能发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-purple-500 to-purple-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/bNY91xl0Y5" alt="核电站" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-atom mr-1"></i>核能发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">核能发电</h3>
+                                <p class="text-gray-600 mb-6">核能发电是利用核反应堆中核裂变所释放出的热能进行发电的方式，具有能量密度高、无污染排放、基荷电源稳定等特点。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-xl font-bold text-gray-800">6083万千瓦</div>
+                                    </div>
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-xl font-bold text-gray-800">4508.5亿kWh</div>
+                                    </div>
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">同比增长</div>
+                                        <div class="text-xl font-bold text-green-600">+3.7%</div>
+                                    </div>
+                                    <div class="bg-purple-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.2-0.4元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>能量密度高</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>基荷稳定</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>无碳排放</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>投资巨大</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>建设周期长</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>安全风险</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 传统能源部分 -->
+            <section id="traditional-energy" class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">传统能源发电技术</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- 燃煤发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-gray-500 to-gray-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/W3S81xl0Y5" alt="燃煤发电厂" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-gray-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-fire mr-1"></i>燃煤发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">燃煤发电</h3>
+                                <p class="text-gray-600 mb-6">燃煤发电是利用煤炭燃烧产生的热能发电的方式，是中国电力系统的重要组成部分，具有技术成熟、供电稳定等特点，但也面临着环保压力。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-xl font-bold text-gray-800">11.9亿千瓦</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-xl font-bold text-gray-800">63742.6亿kWh</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">同比增长</div>
+                                        <div class="text-xl font-bold text-green-600">+1.7%</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.32-0.76元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>技术成熟</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>供电稳定</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>调峰能力强</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>污染严重</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>碳排放高</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>资源有限</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 燃气发电 -->
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-64 bg-gradient-to-r from-orange-500 to-orange-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/t0y81xl0Y5" alt="燃气发电厂" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-orange-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-gas-pump mr-1"></i>燃气发电
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold mb-4">燃气发电</h3>
+                                <p class="text-gray-600 mb-6">燃气发电是利用天然气燃烧发电的方式，具有效率高、污染小、启停灵活等特点，是调峰和分布式能源的重要选择。</p>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-orange-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">技术特点</div>
+                                        <div class="text-xl font-bold text-gray-800">高效清洁</div>
+                                    </div>
+                                    <div class="bg-orange-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">调峰能力</div>
+                                        <div class="text-xl font-bold text-gray-800">优秀</div>
+                                    </div>
+                                    <div class="bg-orange-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">度电成本</div>
+                                        <div class="text-xl font-bold text-gray-800">0.4-0.7元</div>
+                                    </div>
+                                    <div class="bg-orange-50 p-4 rounded-lg">
+                                        <div class="text-sm text-gray-500 mb-1">碳排放</div>
+                                        <div class="text-xl font-bold text-green-600">低50%</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-4">
+                                    <div class="flex-1 bg-green-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-green-700 mb-2">优势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>污染小</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>效率高</li>
+                                            <li><i class="fas fa-check text-green-500 mr-1"></i>启停灵活</li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex-1 bg-red-50 p-4 rounded-lg">
+                                        <div class="text-sm font-semibold text-red-700 mb-2">劣势</div>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>成本较高</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>依赖进口</li>
+                                            <li><i class="fas fa-times text-red-500 mr-1"></i>管网限制</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 对比分析 -->
+            <section class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">能源技术对比分析</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                        <!-- 度电成本对比 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-chart-bar text-primary mr-3"></i>度电成本竞争力
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">水电</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-blue-500 h-4 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.07-0.35元</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">光伏</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-yellow-500 h-4 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.15-0.5元</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">核电</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-purple-500 h-4 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.2-0.4元</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">风电</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-green-500 h-4 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.2-0.8元</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">煤电</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-gray-500 h-4 rounded-full" style="width: 70%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.32-0.76元</div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-24 text-sm font-medium text-gray-600">气电</div>
+                                    <div class="flex-1 bg-gray-200 rounded-full h-4 mr-4">
+                                        <div class="bg-orange-500 h-4 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                    <div class="w-20 text-sm font-semibold">0.4-0.7元</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 综合性能对比 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-star text-primary mr-3"></i>综合性能评分
+                            </h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">能源类型</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">环保性</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">稳定性</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">经济性</th>
+                                            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600">综合</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">水电</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">95</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">85</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">90</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">90</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">光伏</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">98</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">65</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">85</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">83</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">风电</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">96</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">60</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">80</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">79</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">核电</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">92</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">90</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">75</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">86</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">煤电</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">30</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">95</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">70</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">65</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-3 text-sm font-medium text-gray-800">气电</td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">70</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">85</span></td>
+                                            <td class="px-4 py-3 text-center text-sm"><span class="bg-red-100 text-red-800 px-2 py-1 rounded-full">60</span></td>
+                                            <td class="px-4 py-3 text-center text-sm font-semibold"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">72</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 未来发展趋势 -->
+                    <div class="bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-rocket text-primary mr-3"></i>未来发展趋势
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+                                <div class="text-3xl font-bold text-blue-600 mb-2">30%</div>
+                                <div class="text-sm font-semibold text-blue-800 mb-2">年均增速</div>
+                                <div class="text-sm text-gray-600">新能源装机容量预计保持年均30%以上增长</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+                                <div class="text-3xl font-bold text-green-600 mb-2">50%</div>
+                                <div class="text-sm font-semibold text-green-800 mb-2">占比目标</div>
+                                <div class="text-sm text-gray-600">2030年新能源发电量占比将超过50%</div>
+                            </div>
+                            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+                                <div class="text-3xl font-bold text-purple-600 mb-2">90%</div>
+                                <div class="text-sm font-semibold text-purple-800 mb-2">成本下降</div>
+                                <div class="text-sm text-gray-600">光伏度电成本相比2010年已下降超过90%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 政策解读页面 -->
+        <div id="policies-page" class="page-content page-hidden">
+            <!-- 英雄区域 -->
+            <section class="gradient-bg text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">电力政策解读</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">2017-2026年国家电力政策发展历程与影响分析</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showSection('policy-timeline')" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-history mr-2"></i>政策时间线
+                        </button>
+                        <button onclick="showSection('key-policies')" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                            <i class="fas fa-file-alt mr-2"></i>重要政策
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 政策概览 -->
+            <section class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">政策发展脉络</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl card-hover">
+                            <div class="text-4xl font-bold text-blue-600 mb-4">2017-2019</div>
+                            <div class="text-xl font-semibold text-gray-800 mb-3">市场化改革启动</div>
+                            <div class="text-gray-600 space-y-2">
+                                <p><i class="fas fa-check text-blue-500 mr-2"></i>可再生能源规划实施</p>
+                                <p><i class="fas fa-check text-blue-500 mr-2"></i>燃煤电价机制改革</p>
+                                <p><i class="fas fa-check text-blue-500 mr-2"></i>新能源补贴政策调整</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl card-hover">
+                            <div class="text-4xl font-bold text-green-600 mb-4">2020-2023</div>
+                            <div class="text-xl font-semibold text-gray-800 mb-3">市场化加速推进</div>
+                            <div class="text-gray-600 space-y-2">
+                                <p><i class="fas fa-check text-green-500 mr-2"></i>全面市场化改革</p>
+                                <p><i class="fas fa-check text-green-500 mr-2"></i>绿色电力交易启动</p>
+                                <p><i class="fas fa-check text-green-500 mr-2"></i>全国统一市场建设</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl card-hover">
+                            <div class="text-4xl font-bold text-purple-600 mb-4">2024-2026</div>
+                            <div class="text-xl font-semibold text-gray-800 mb-3">高质量发展阶段</div>
+                            <div class="text-gray-600 space-y-2">
+                                <p><i class="fas fa-check text-purple-500 mr-2"></i>新能源电价市场化</p>
+                                <p><i class="fas fa-check text-purple-500 mr-2"></i>电力市场基本规则</p>
+                                <p><i class="fas fa-check text-purple-500 mr-2"></i>REITs市场快速发展</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 政策时间线 -->
+            <section id="policy-timeline" class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">政策时间线</h2>
+                    
+                    <div class="relative">
+                        <!-- 时间线连接线 -->
+                        <div class="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gray-200"></div>
+                        
+                        <!-- 2017年政策 -->
+                        <div class="relative mb-16">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-blue-600 font-semibold mb-1">2017年7月</div>
+                                        <h3 class="text-xl font-bold mb-3">可再生能源发展"十三五"规划</h3>
+                                        <p class="text-gray-600 mb-4">国能发新能(2017)31号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 光伏电站2017-2020年规模规划4年共计86.5GW</li>
+                                            <li>• 领跑者基地每年8GW</li>
+                                            <li>• 甘肃、新疆、宁夏因弃光限电暂不安排新增规模</li>
+                                            <li>• 加强可再生能源目标引导和监测考核</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                                    2017
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2019年政策 -->
+                        <div class="relative mb-16">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 hidden md:block"></div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">
+                                    2019
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-green-600 font-semibold mb-1">2019年10月</div>
+                                        <h3 class="text-xl font-bold mb-3">燃煤发电上网电价机制改革</h3>
+                                        <p class="text-gray-600 mb-4">发改价格〔2019〕1658号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 取消长达十五年的燃煤发电上网标杆电价</li>
+                                            <li>• 取消煤电联动机制</li>
+                                            <li>• 改为"基准+上下浮动"的市场化价格机制</li>
+                                            <li>• 浮动幅度原则上不超过10%</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2021年政策 -->
+                        <div class="relative mb-16">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-purple-600 font-semibold mb-1">2021年9月</div>
+                                        <h3 class="text-xl font-bold mb-3">绿色电力交易试点启动</h3>
+                                        <p class="text-gray-600 mb-4">发改办能源〔2021〕755号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 覆盖北京、广东、江苏等20多个省区市</li>
+                                            <li>• 首日交易量近80亿千瓦时</li>
+                                            <li>• 为新能源消纳提供市场化机制</li>
+                                            <li>• 推动绿色能源消费转型</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
+                                    2021
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2022年政策 -->
+                        <div class="relative mb-16">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 hidden md:block"></div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">
+                                    2022
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-orange-600 font-semibold mb-1">2022年11月</div>
+                                        <h3 class="text-xl font-bold mb-3">全国统一电力市场体系</h3>
+                                        <p class="text-gray-600 mb-4">发改体改〔2022〕118号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 推进适应能源结构转型的电力市场机制建设</li>
+                                            <li>• 明确全国统一电力市场建设时间表</li>
+                                            <li>• 2025年初步建成，2029年全面建成</li>
+                                            <li>• 2035年完善市场体系</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2023年政策 -->
+                        <div class="relative mb-16">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-red-600 font-semibold mb-1">2023年</div>
+                                        <h3 class="text-xl font-bold mb-3">煤电容量电价机制</h3>
+                                        <p class="text-gray-600 mb-4">发改价格(2023)1501号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 将原有煤电单一制电价改革为两部制电价</li>
+                                            <li>• 电量电价+容量电价模式</li>
+                                            <li>• 适应煤电向系统调节性电源转型</li>
+                                            <li>• 保障电力系统安全稳定运行</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white font-bold">
+                                    2023
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 2025年政策 -->
+                        <div class="relative">
+                            <div class="flex flex-col md:flex-row items-center">
+                                <div class="md:w-1/2 md:pr-12 hidden md:block"></div>
+                                <div class="z-10 w-12 h-12 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold">
+                                    2025
+                                </div>
+                                <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                                    <div class="bg-white p-6 rounded-xl shadow-lg card-hover">
+                                        <div class="text-sm text-indigo-600 font-semibold mb-1">2025年2月</div>
+                                        <h3 class="text-xl font-bold mb-3">新能源电价市场化改革</h3>
+                                        <p class="text-gray-600 mb-4">发改价格〔2025〕136号</p>
+                                        <ul class="text-sm text-gray-600 space-y-1">
+                                            <li>• 新能源项目上网电量原则上全部进入电力市场</li>
+                                            <li>• 上网电价通过市场交易形成</li>
+                                            <li>• 建立新能源可持续发展价格结算机制</li>
+                                            <li>• 推动新能源高质量发展</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 重要政策文件 -->
+            <section id="key-policies" class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">重要政策文件解读</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- 政策1 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-blue-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">可再生能源规划</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2017</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">国能发新能(2017)31号</p>
+                                <p class="text-gray-600 mb-4">明确了2017-2020年可再生能源发展目标和规模，为新能源产业发展提供了政策保障。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-bullseye text-blue-500 mr-2"></i>
+                                        <span>光伏领跑者基地建设</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                                        <span>区域差异化发展策略</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-chart-line text-green-500 mr-2"></i>
+                                        <span>目标考核机制建立</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策2 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-green-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">电价机制改革</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2019</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">发改价格〔2019〕1658号</p>
+                                <p class="text-gray-600 mb-4">取消传统标杆电价，建立市场化定价机制，标志着电力市场化改革进入新阶段。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-times text-red-500 mr-2"></i>
+                                        <span>取消煤电联动机制</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-exchange-alt text-blue-500 mr-2"></i>
+                                        <span>基准+浮动定价模式</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-percentage text-green-500 mr-2"></i>
+                                        <span>10%浮动幅度限制</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策3 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-purple-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">绿色电力交易</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2021</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">发改办能源〔2021〕755号</p>
+                                <p class="text-gray-600 mb-4">启动绿色电力交易试点，为新能源消纳和绿色消费提供市场化渠道。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-globe text-blue-500 mr-2"></i>
+                                        <span>全国20+省区市参与</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+                                        <span>首日交易80亿kWh</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-leaf text-green-500 mr-2"></i>
+                                        <span>推动绿色消费转型</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策4 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-orange-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">统一市场建设</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2022</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">发改体改〔2022〕118号</p>
+                                <p class="text-gray-600 mb-4">明确全国统一电力市场建设时间表，推动电力市场一体化发展。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-calendar text-blue-500 mr-2"></i>
+                                        <span>2025年初步建成</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-flag-checkered text-green-500 mr-2"></i>
+                                        <span>2029年全面建成</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-cogs text-purple-500 mr-2"></i>
+                                        <span>2035年完善体系</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策5 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-red-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">容量电价机制</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2023</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">发改价格(2023)1501号</p>
+                                <p class="text-gray-600 mb-4">建立煤电容量电价机制，适应煤电角色转型，保障电力系统安全。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-bolt text-yellow-500 mr-2"></i>
+                                        <span>电量电价+容量电价</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-exchange-alt text-blue-500 mr-2"></i>
+                                        <span>两部制电价模式</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                                        <span>保障系统安全稳定</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策6 -->
+                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-lg card-hover">
+                            <div class="bg-indigo-600 text-white p-4">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="font-bold">新能源市场化</h3>
+                                    <span class="text-sm bg-white/20 px-2 py-1 rounded">2025</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <p class="text-sm text-gray-500 mb-3">发改价格〔2025〕136号</p>
+                                <p class="text-gray-600 mb-4">推动新能源全面市场化，建立可持续发展的价格机制。</p>
+                                <div class="space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-bullseye text-blue-500 mr-2"></i>
+                                        <span>全部电量进入市场</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-handshake text-green-500 mr-2"></i>
+                                        <span>市场交易形成电价</span>
+                                    </div>
+                                    <div class="flex items-center text-sm">
+                                        <i class="fas fa-chart-line text-purple-500 mr-2"></i>
+                                        <span>可持续发展机制</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 政策影响分析 -->
+            <section class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">政策实施成效与影响</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- 实施成效 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-chart-line text-green-500 mr-3"></i>实施成效
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-arrow-up text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">新能源装机快速增长</h4>
+                                        <p class="text-gray-600 text-sm">2017-2025年，新能源装机从不到2亿千瓦增长到16.8亿千瓦，年均增速28%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-arrow-down text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">度电成本大幅下降</h4>
+                                        <p class="text-gray-600 text-sm">光伏度电成本从2017年的0.5元以上下降到2025年的0.15-0.2元</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-exchange-alt text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">市场化程度显著提高</h4>
+                                        <p class="text-gray-600 text-sm">电力市场化交易电量占比从不足10%提升到80%以上</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-orange-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-leaf text-orange-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">REITs市场快速发展</h4>
+                                        <p class="text-gray-600 text-sm">从试点阶段迈入常态化发行，成为绿色金融重要组成部分</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 未来展望 -->
+                        <div class="bg-white p-8 rounded-2xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-rocket text-primary mr-3"></i>未来发展展望
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-bullseye text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">新能源将成主体电源</h4>
+                                        <p class="text-gray-600 text-sm">预计到2030年，新能源装机将达到30亿千瓦以上，占总装机比重超过50%</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-cogs text-green-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">新型电力系统加速构建</h4>
+                                        <p class="text-gray-600 text-sm">储能、虚拟电厂等技术发展，提高系统灵活性和调节能力</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-purple-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-globe text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">电力市场国际化发展</h4>
+                                        <p class="text-gray-600 text-sm">中国电力市场化改革经验为全球提供借鉴</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-yellow-100 p-3 rounded-full mr-4">
+                                        <i class="fas fa-chart-pie text-yellow-600"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 mb-1">REITs市场前景广阔</h4>
+                                        <p class="text-gray-600 text-sm">清洁能源REITs发行规模有望年均增长30%以上</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- REITs市场页面 -->
+        <div id="reits-page" class="page-content page-hidden">
+            <!-- 英雄区域 -->
+            <section class="gradient-bg text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">新能源REITs市场</h1>
+                    <p class="text-xl md:text-2xl mb-8 opacity-90">清洁能源基础设施公募REITs投资分析</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="showSection('reits-overview')" class="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-chart-line mr-2"></i>市场概览
+                        </button>
+                        <button onclick="showSection('reits-comparison')" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                            <i class="fas fa-table mr-2"></i>产品对比
+                        </button>
+                        <button onclick="showSection('reits-performance')" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                            <i class="fas fa-chart-bar mr-2"></i>市场表现
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 市场概览 -->
+            <section id="reits-overview" class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">市场概况</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                        <!-- 实时数据卡片 -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">已上市REITs</span>
+                                <i class="fas fa-bolt text-blue-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">8只</div>
+                            <div class="text-sm text-green-600 mt-2 flex items-center">
+                                <i class="fas fa-plus-circle mr-1"></i>
+                                <span>清洁能源领域</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">总市值</span>
+                                <i class="fas fa-chart-pie text-green-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">235.09亿元</div>
+                            <div class="text-sm text-green-600 mt-2 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>+13.1% 今年以来</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">平均涨幅</span>
+                                <i class="fas fa-line-chart text-purple-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">+25.3%</div>
+                            <div class="text-sm text-green-600 mt-2 flex items-center">
+                                <i class="fas fa-bolt mr-1"></i>
+                                <span>实时更新</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- 市场发展特点 -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-star text-primary mr-3"></i>市场发展特点
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="bg-blue-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-bullseye text-blue-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">覆盖领域广泛</h4>
+                                        <p class="text-gray-600 text-sm">涵盖风力、光伏、水力及燃气发电四大细分领域</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-chart-line text-green-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">发行规模增长</h4>
+                                        <p class="text-gray-600 text-sm">合计发行规模207.89亿元，市场总市值约235.09亿元</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-purple-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-users text-purple-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">投资者参与度高</h4>
+                                        <p class="text-gray-600 text-sm">投资者数量超过120万，市场关注度持续提升</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 政策支持 -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-file-alt text-primary mr-3"></i>政策支持
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="bg-orange-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-calendar text-orange-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">2025年9月新政</h4>
+                                        <p class="text-gray-600 text-sm">国家发改委发布通知，明确鼓励加快清洁能源类REITs申报</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-red-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-expand text-red-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">资产范围扩展</h4>
+                                        <p class="text-gray-600 text-sm">将储能、灵活煤电等纳入REITs资产范围</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-yellow-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-clock text-yellow-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">补贴政策优化</h4>
+                                        <p class="text-gray-600 text-sm">缩短补贴回款周期至6个月，改善现金流状况</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="bg-indigo-100 p-2 rounded-full mr-3 mt-1">
+                                        <i class="fas fa-gavel text-indigo-600 text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">立法推进</h4>
+                                        <p class="text-gray-600 text-sm">证监会加快推进REITs专项立法，完善市场规则</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 市场规模增长趋势 -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg mt-12">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-chart-area text-primary mr-3"></i>市场规模增长趋势
+                        </h3>
+                        <div class="h-80" id="marketSizeChart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REITs产品对比 -->
+            <section id="reits-comparison" class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">REITs产品对比</h2>
+                    
+                    <!-- 对比表格 -->
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-600">产品名称</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">类型</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">底层资产</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">发行规模</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">当前价格</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">涨幅</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">股息率</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-600">状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-800">华夏中核清洁能源REIT</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">水电</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-600">和田波波娜水电站</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">25.8亿元</td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">4.85元</td>
+                                        <td class="px-6 py-4 text-center text-sm text-green-600">+28.5%</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">4.2%</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">正常交易</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-800">中信建投国家电投新能源REIT</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">风电</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-600">滨海北H1、H2风电</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">30.1亿元</td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">5.12元</td>
+                                        <td class="px-6 py-4 text-center text-sm text-green-600">+31.81%</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">3.8%</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">正常交易</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-800">中航京能光伏REIT</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">光伏</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-600">榆林、随州光伏</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">22.3亿元</td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">5.65元</td>
+                                        <td class="px-6 py-4 text-center text-sm text-green-600">+56.65%</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">3.5%</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">正常交易</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-800">中信建投明阳智能新能源REIT</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">风电</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-600">明阳智能风电场</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">28.5亿元</td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">4.98元</td>
+                                        <td class="px-6 py-4 text-center text-sm text-green-600">+25.2%</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">4.0%</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full">正常交易</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 transition-colors">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-800">工银蒙能清洁能源REIT</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">综合</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-600">蒙能清洁能源项目</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">26.7亿元</td>
+                                        <td class="px-6 py-4 text-center text-sm font-semibold text-gray-800">4.21元</td>
+                                        <td class="px-6 py-4 text-center text-sm text-red-600">-2.3%</td>
+                                        <td class="px-6 py-4 text-center text-sm text-gray-800">4.5%</td>
+                                        <td class="px-6 py-4 text-center text-sm">
+                                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">关注</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 产品详情 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- 华夏中核清洁能源REIT -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/QezX1xlPb8" alt="光伏电站鸟瞰" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-water mr-1"></i>水电REIT
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold mb-3">华夏中核清洁能源REIT</h3>
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full mr-2">水电</span>
+                                    <span>上市时间: 2024-03-15</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-blue-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-lg font-bold text-gray-800">150兆瓦</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">运营年限</div>
+                                        <div class="text-lg font-bold text-gray-800">14年</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-lg font-bold text-gray-800">6.2亿kWh</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">当前价格</div>
+                                        <div class="text-lg font-bold text-gray-800">4.85元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-4">
+                                    <p class="font-semibold mb-1">底层资产：和田地区波波娜水电站</p>
+                                    <p>运营超14年，收入稳定，是新疆地区重要的清洁能源项目。</p>
+                                </div>
+                                
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <div class="text-sm font-semibold text-green-700 mb-2">发行表现</div>
+                                    <p class="text-xs text-gray-600">认购资金累计达1616.89亿元，公众投资者认购倍数392倍，网下投资者认购倍数340倍，创下全市场已发行REITs的历史新高。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 中信建投国家电投新能源REIT -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
+                            <div class="h-48 bg-gradient-to-r from-green-500 to-green-700 relative">
+                                <img src="https://aka.doubaocdn.com/s/lOsH1xlPb8" alt="海上风电场" class="w-full h-full object-cover opacity-90">
+                                <div class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-bullseye mr-1"></i>风电REIT
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold mb-3">中信建投国家电投新能源REIT</h3>
+                                <div class="flex items-center text-sm text-gray-500 mb-4">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full mr-2">风电</span>
+                                    <span>上市时间: 2024-05-22</span>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-green-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">装机容量</div>
+                                        <div class="text-lg font-bold text-gray-800">500兆瓦</div>
+                                    </div>
+                                    <div class="bg-green-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">可利用率</div>
+                                        <div class="text-lg font-bold text-gray-800">99.55%</div>
+                                    </div>
+                                    <div class="bg-green-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">年发电量</div>
+                                        <div class="text-lg font-bold text-gray-800">13.5亿kWh</div>
+                                    </div>
+                                    <div class="bg-green-50 p-3 rounded-lg">
+                                        <div class="text-xs text-gray-500 mb-1">当前价格</div>
+                                        <div class="text-lg font-bold text-gray-800">5.12元</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-4">
+                                    <p class="font-semibold mb-1">底层资产：滨海北H1、H2海上风电项目</p>
+                                    <p>总装机500兆瓦，是国内领先的海上风电项目，技术先进，发电效率高。</p>
+                                </div>
+                                
+                                <div class="bg-green-50 p-4 rounded-lg">
+                                    <div class="text-sm font-semibold text-green-700 mb-2">运营数据</div>
+                                    <p class="text-xs text-gray-600">2025年上半年风电机组可利用率99.55%，发电量6.87亿千瓦时（同比提升1.13%）。自上市以来单位价格上涨31.81%。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 市场表现分析 -->
+            <section id="reits-performance" class="py-16 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">市场表现分析</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                        <!-- 实时市场数据 -->
+                        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">中证REITs全收益指数</span>
+                                <i class="fas fa-bolt text-blue-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">1014.80</div>
+                            <div class="text-sm text-green-600 mt-2 flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>+1.56% 当周</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">上涨产品</span>
+                                <i class="fas fa-arrow-up text-green-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">67只</div>
+                            <div class="text-sm text-gray-600 mt-2">
+                                <span>成交量: 2.3亿</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl card-hover">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-gray-500">成交金额</span>
+                                <i class="fas fa-exchange-alt text-purple-500"></i>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800">18.5亿元</div>
+                            <div class="text-sm text-gray-600 mt-2">
+                                <span>较上周 +12.3%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        <!-- 溢价率分析 -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-percentage text-primary mr-3"></i>溢价率分析
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-600">最高溢价率</span>
+                                    <span class="text-lg font-bold text-red-600">98.08%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-600">最低溢价率</span>
+                                    <span class="text-lg font-bold text-green-600">19.36%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-600">平均溢价率</span>
+                                    <span class="text-lg font-bold text-blue-600">45.23%</span>
+                                </div>
+                                
+                                <div class="mt-8">
+                                    <h4 class="font-semibold text-gray-800 mb-3">溢价率分布</h4>
+                                    <div class="h-40" id="premiumRateChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 交易活跃度 -->
+                        <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg">
+                            <h3 class="text-2xl font-bold mb-6 flex items-center">
+                                <i class="fas fa-chart-bar text-primary mr-3"></i>交易活跃度
+                            </h3>
+                            <div class="space-y-6">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-600">平均换手率</span>
+                                    <span class="text-lg font-bold text-blue-600">1.2%</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-600">投资者数量</span>
+                                    <span class="text-lg font-bold text-purple-600">120万+</span>
+                                </div>
+                                
+                                <div class="mt-8">
+                                    <h4 class="font-semibold text-gray-800 mb-3">收益率对比</h4>
+                                    <div class="h-40" id="returnRateChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 市场回报表现 -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-8 shadow-lg mt-12">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-chart-line text-primary mr-3"></i>市场回报表现
+                        </h3>
+                        <div class="h-80" id="performanceChart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 投资分析 -->
+            <section class="py-16 bg-neutral-light">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-center mb-12">投资分析与建议</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- 投资优势 -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                            <div class="text-center mb-6">
+                                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-thumbs-up text-green-600 text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold">投资优势</h3>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">政策支持明确</h4>
+                                        <p class="text-gray-600 text-xs">国家大力推动新能源发展，REITs政策持续优化</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">现金流稳定</h4>
+                                        <p class="text-gray-600 text-xs">基础设施项目运营稳定，租金收入可预测性强</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">分红比例高</h4>
+                                        <p class="text-gray-600 text-xs">要求将不低于90%的合并后基金年度可供分配金额予以分配</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">抗通胀属性</h4>
+                                        <p class="text-gray-600 text-xs">基础设施资产具有一定的抗通胀特性</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 风险因素 -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                            <div class="text-center mb-6">
+                                <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold">风险因素</h3>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">利率风险</h4>
+                                        <p class="text-gray-600 text-xs">REITs价格与市场利率呈反向变动关系</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">流动性风险</h4>
+                                        <p class="text-gray-600 text-xs">部分REITs产品交易活跃度较低，可能面临流动性不足</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">政策风险</h4>
+                                        <p class="text-gray-600 text-xs">新能源补贴政策变化可能影响项目收益</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">运营风险</h4>
+                                        <p class="text-gray-600 text-xs">基础设施项目运营维护不当可能影响收益</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 投资建议 -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg card-hover">
+                            <div class="text-center mb-6">
+                                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fas fa-lightbulb text-blue-600 text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-bold">投资建议</h3>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <i class="fas fa-lightbulb text-blue-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">长期配置</h4>
+                                        <p class="text-gray-600 text-xs">作为资产配置的一部分，长期持有获取稳定分红</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-lightbulb text-blue-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">分散投资</h4>
+                                        <p class="text-gray-600 text-xs">选择不同类型、不同区域的REITs产品分散风险</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-lightbulb text-blue-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">关注基本面</h4>
+                                        <p class="text-gray-600 text-xs">重点关注底层资产质量、运营能力和分红稳定性</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-lightbulb text-blue-500 mr-3 mt-1"></i>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 text-sm">政策跟踪</h4>
+                                        <p class="text-gray-600 text-xs">密切关注新能源和REITs相关政策变化</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-neutral text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-bolt text-primary text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">卢裕森电力网</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">
+                        专注于电力行业知识传播，为您提供全面的电力技术、政策和市场信息。
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" onclick="showPage('home'); return false;" class="hover:text-primary transition-colors">首页</a></li>
+                        <li><a href="#" onclick="showPage('policies'); return false;" class="hover:text-primary transition-colors">政策解读</a></li>
+                        <li><a href="#" onclick="showPage('reits'); return false;" class="hover:text-primary transition-colors">REITs市场</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+                    <div class="space-y-2 text-sm text-gray-300">
+                        <p><i class="fas fa-envelope mr-2"></i>contact@powerknowledge.com</p>
+                        <p><i class="fas fa-phone mr-2"></i>400-123-4567</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>北京市海淀区</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2025 卢裕森电力网. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面切换功能
+        function showPage(pageName) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('page-active');
+                page.classList.add('page-hidden');
+            });
+            // 显示目标页面
+            const targetPage = document.getElementById(pageName + '-page');
+            if (targetPage) {
+                targetPage.classList.remove('page-hidden');
+                targetPage.classList.add('page-active');
+            }
+            // 更新导航状态
+            updateNavigation(pageName);
+            // 滚动到顶部
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // 显示章节内容
+        function showSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({behavior: 'smooth', block: 'start'});
+            }
+            // 关闭移动端菜单
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // 更新导航状态
+        function updateNavigation(activePage) {
+            // 更新桌面端导航
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'font-semibold', 'border-b-2', 'border-primary', 'pb-1', 'active');
+                link.classList.add('text-gray-700');
+            });
+            // 更新移动端导航
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'font-semibold', 'active');
+                link.classList.add('text-gray-700');
+            });
+            // 设置活动导航项
+            document.querySelectorAll(`a[onclick*="showPage('${activePage}')"]`).forEach(link => {
+                link.classList.remove('text-gray-700');
+                link.classList.add('text-primary', 'font-semibold', 'active');
+                if (link.classList.contains('nav-link')) {
+                    link.classList.add('border-b-2', 'border-primary', 'pb-1');
+                }
+            });
+        }
+
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white/95', 'backdrop-blur-sm');
+                navbar.classList.remove('bg-white');
+            } else {
+                navbar.classList.remove('bg-white/95', 'backdrop-blur-sm');
+                navbar.classList.add('bg-white');
+            }
+        });
+
+        // 初始化图表
+        function initCharts() {
+            // 市场规模增长趋势图
+            const marketSizeChart = echarts.init(document.getElementById('marketSizeChart'));
+            const marketSizeOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['2023年', '2024年', '2025年', '2026年预测'],
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 0
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '市场规模（亿元）',
+                    axisLabel: {
+                        formatter: '{value}'
+                    }
+                },
+                series: [{
+                    name: '市场规模',
+                    type: 'bar',
+                    data: [120, 180, 235, 350],
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#165DFF', '#36D399', '#F87272', '#8B5CF6'];
+                            return colors[params.dataIndex % colors.length];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}亿'
+                    }
+                }]
+            };
+            marketSizeChart.setOption(marketSizeOption);
+
+            // 溢价率分布图
+            const premiumRateChart = echarts.init(document.getElementById('premiumRateChart'));
+            const premiumRateOption = {
+                tooltip: {
+                    trigger: 'item'
+                },
+                series: [{
+                    name: '溢价率分布',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 16,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        { value: 25, name: '0-20%' },
+                        { value: 35, name: '20-40%' },
+                        { value: 20, name: '40-60%' },
+                        { value: 15, name: '60-80%' },
+                        { value: 5, name: '80%+' }
+                    ],
+                    color: ['#36D399', '#165DFF', '#F87272', '#8B5CF6', '#F59E0B']
+                }]
+            };
+            premiumRateChart.setOption(premiumRateOption);
+
+            // 收益率对比图
+            const returnRateChart = echarts.init(document.getElementById('returnRateChart'));
+            const returnRateOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['REITs平均', '国债', '银行理财'],
+                    axisLabel: {
+                        interval: 0
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '年化收益率(%)',
+                    axisLabel: {
+                        formatter: '{value}%'
+                    }
+                },
+                series: [{
+                    name: '年化收益率',
+                    type: 'bar',
+                    data: [8.5, 3.2, 2.8],
+                    itemStyle: {
+                        color: function(params) {
+                            const colors = ['#165DFF', '#36D399', '#F87272'];
+                            return colors[params.dataIndex % colors.length];
+                        }
+                    },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: '{c}%'
+                    }
+                }]
+            };
+            returnRateChart.setOption(returnRateOption);
+
+            // 市场回报表现图
+            const performanceChart = echarts.init(document.getElementById('performanceChart'));
+            const performanceOption = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['中证REITs指数', '沪深300', '中债综合指数'],
+                    bottom: 0
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '15%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '累计收益率(%)',
+                    axisLabel: {
+                        formatter: '{value}%'
+                    }
+                },
+                series: [
+                    {
+                        name: '中证REITs指数',
+                        type: 'line',
+                        data: [2.1, 4.5, 6.8, 8.2, 10.5, 12.3, 14.1, 16.5, 18.2, 20.1, 22.5, 25.3],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: '#165DFF'
+                        },
+                        itemStyle: {
+                            color: '#165DFF'
+                        }
+                    },
+                    {
+                        name: '沪深300',
+                        type: 'line',
+                        data: [1.2, 3.1, 4.5, 6.2, 7.8, 9.1, 10.5, 12.1, 13.5, 15.2, 16.8, 18.5],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: '#36D399'
+                        },
+                        itemStyle: {
+                            color: '#36D399'
+                        }
+                    },
+                    {
+                        name: '中债综合指数',
+                        type: 'line',
+                        data: [0.8, 1.5, 2.1, 2.8, 3.5, 4.2, 4.8, 5.5, 6.2, 6.8, 7.5, 8.2],
+                        smooth: true,
+                        lineStyle: {
+                            width: 3,
+                            color: '#F87272'
+                        },
+                        itemStyle: {
+                            color: '#F87272'
+                        }
+                    }
+                ]
+            };
+            performanceChart.setOption(performanceOption);
+
+            // 窗口大小变化时重绘图表
+            window.addEventListener('resize', function() {
+                marketSizeChart.resize();
+                premiumRateChart.resize();
+                returnRateChart.resize();
+                performanceChart.resize();
+            });
+        }
+
+        // 页面加载完成后初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+    </script>
+</body>
+</html>
